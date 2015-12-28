@@ -1,0 +1,38 @@
+{
+    "version": 1,
+    "schedule": {
+        "type": "simple",
+        "interval": "1s"
+    },
+    "workflow": {
+        "collect": {
+            "metrics": {
+                "/intel/linux/load/min1": {},
+                "/intel/linux/load/min15": {},
+                "/intel/linux/load/scheduling": {}
+            },
+            "config": {
+                "/intel/mock": {
+                    "password": "secret",
+                    "user": "root"
+                }
+            },
+            "process": [
+                {
+                    "plugin_name": "passthru",
+                    "process": null,
+                    "publish": [
+                        {
+                            "plugin_name": "file",
+                            "config": {
+                                "file": "/tmp/published_load"
+                            }
+                        }
+                    ],
+                    "config": null
+                }
+            ],
+            "publish": null
+        }
+    }
+}

@@ -7,9 +7,9 @@
     "workflow": {
         "collect": {
             "metrics": {
-                "/intel/linux/load/min1": {},
-                "/intel/linux/load/min15": {},
-                "/intel/linux/load/scheduling": {}
+                "/intel/procfs/load/min1": {},
+                "/intel/procfs/load/min15": {},
+                "/intel/procfs/load/scheduling": {}
             },
             "config": {
                 "/intel/mock": {

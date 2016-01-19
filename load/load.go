@@ -38,8 +38,8 @@ import (
 const (
 	// VENDOR namespace part
 	VENDOR = "intel"
-	// OS namespace part
-	OS = "linux"
+	// FS namespace part
+	FS = "procfs"
 	// PLUGIN namespace part
 	PLUGIN = "load"
 	// VERSION of load info plugin
@@ -150,7 +150,7 @@ func (mp *loadPlugin) GetMetricTypes(_ plugin.PluginConfigType) ([]plugin.Plugin
 		return nil, err
 	}
 	for stat := range mp.stats {
-		metricType := plugin.PluginMetricType{Namespace_: []string{VENDOR, OS, PLUGIN, stat}}
+		metricType := plugin.PluginMetricType{Namespace_: []string{VENDOR, FS, PLUGIN, stat}}
 		metricTypes = append(metricTypes, metricType)
 	}
 	return metricTypes, nil

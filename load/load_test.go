@@ -123,13 +123,13 @@ func (lis *LoadInfoSuite) TestGetMetricTypes() {
 					namespaces = append(namespaces, strings.Join(m.Namespace(), "/"))
 				}
 
-				So(namespaces, ShouldContain, "intel/linux/load/min1")
-				So(namespaces, ShouldContain, "intel/linux/load/min1_rel")
-				So(namespaces, ShouldContain, "intel/linux/load/min5")
-				So(namespaces, ShouldContain, "intel/linux/load/min5_rel")
-				So(namespaces, ShouldContain, "intel/linux/load/min15")
-				So(namespaces, ShouldContain, "intel/linux/load/min15_rel")
-				So(namespaces, ShouldContain, "intel/linux/load/scheduling")
+				So(namespaces, ShouldContain, "intel/procfs/load/min1")
+				So(namespaces, ShouldContain, "intel/procfs/load/min1_rel")
+				So(namespaces, ShouldContain, "intel/procfs/load/min5")
+				So(namespaces, ShouldContain, "intel/procfs/load/min5_rel")
+				So(namespaces, ShouldContain, "intel/procfs/load/min15")
+				So(namespaces, ShouldContain, "intel/procfs/load/min15_rel")
+				So(namespaces, ShouldContain, "intel/procfs/load/scheduling")
 			})
 		})
 	})
@@ -141,10 +141,10 @@ func (lis *LoadInfoSuite) TestCollectMetrics() {
 
 		Convey("When one wants to get values for given metric types", func() {
 			mTypes := []plugin.PluginMetricType{
-				plugin.PluginMetricType{Namespace_: []string{"intel", "linux", "load", "min1"}},
-				plugin.PluginMetricType{Namespace_: []string{"intel", "linux", "load", "scheduling"}},
-				plugin.PluginMetricType{Namespace_: []string{"intel", "linux", "load", "min15"}},
-				plugin.PluginMetricType{Namespace_: []string{"intel", "linux", "load", "min15_rel"}},
+				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "min1"}},
+				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "scheduling"}},
+				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "min15"}},
+				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "min15_rel"}},
 			}
 
 			metrics, err := loadPlg.CollectMetrics(mTypes)
@@ -164,10 +164,10 @@ func (lis *LoadInfoSuite) TestCollectMetrics() {
 
 				So(len(metrics), ShouldEqual, len(stats))
 
-				So(stats["intel/linux/load/min1"], ShouldNotBeNil)
-				So(stats["intel/linux/load/scheduling"], ShouldNotBeNil)
-				So(stats["intel/linux/load/min15"], ShouldNotBeNil)
-				So(stats["intel/linux/load/min15_rel"], ShouldNotBeNil)
+				So(stats["intel/procfs/load/min1"], ShouldNotBeNil)
+				So(stats["intel/procfs/load/scheduling"], ShouldNotBeNil)
+				So(stats["intel/procfs/load/min15"], ShouldNotBeNil)
+				So(stats["intel/procfs/load/min15_rel"], ShouldNotBeNil)
 			})
 		})
 	})

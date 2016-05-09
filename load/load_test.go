@@ -24,14 +24,13 @@ package load
 import (
 	"fmt"
 	"os"
-	"strings"
 	"testing"
 
+	"github.com/intelsdi-x/snap/control/plugin"
+	"github.com/intelsdi-x/snap/core"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
-
-	"github.com/intelsdi-x/snap/control/plugin"
 )
 
 type LoadInfoSuite struct {
@@ -104,12 +103,12 @@ func (lis *LoadInfoSuite) TestGetStats() {
 }
 
 func (lis *LoadInfoSuite) TestGetMetricTypes() {
-	_ = plugin.PluginConfigType{}
+	_ = plugin.ConfigType{}
 	Convey("Given load info plugin initialized", lis.T(), func() {
 		loadPlg := New()
 
 		Convey("When one wants to get list of available meterics", func() {
-			mts, err := loadPlg.GetMetricTypes(plugin.PluginConfigType{})
+			mts, err := loadPlg.GetMetricTypes(plugin.ConfigType{})
 
 			Convey("Then error should not be reported", func() {
 				So(err, ShouldBeNil)
@@ -120,16 +119,16 @@ func (lis *LoadInfoSuite) TestGetMetricTypes() {
 
 				namespaces := []string{}
 				for _, m := range mts {
-					namespaces = append(namespaces, strings.Join(m.Namespace(), "/"))
+					namespaces = append(namespaces, m.Namespace().String())
 				}
 
-				So(namespaces, ShouldContain, "intel/procfs/load/min1")
-				So(namespaces, ShouldContain, "intel/procfs/load/min1_rel")
-				So(namespaces, ShouldContain, "intel/procfs/load/min5")
-				So(namespaces, ShouldContain, "intel/procfs/load/min5_rel")
-				So(namespaces, ShouldContain, "intel/procfs/load/min15")
-				So(namespaces, ShouldContain, "intel/procfs/load/min15_rel")
-				So(namespaces, ShouldContain, "intel/procfs/load/scheduling")
+				So(namespaces, ShouldContain, "/intel/procfs/load/min1")
+				So(namespaces, ShouldContain, "/intel/procfs/load/min1_rel")
+				So(namespaces, ShouldContain, "/intel/procfs/load/min5")
+				So(namespaces, ShouldContain, "/intel/procfs/load/min5_rel")
+				So(namespaces, ShouldContain, "/intel/procfs/load/min15")
+				So(namespaces, ShouldContain, "/intel/procfs/load/min15_rel")
+				So(namespaces, ShouldContain, "/intel/procfs/load/scheduling")
 			})
 		})
 	})
@@ -140,11 +139,11 @@ func (lis *LoadInfoSuite) TestCollectMetrics() {
 		loadPlg := New()
 
 		Convey("When one wants to get values for given metric types", func() {
-			mTypes := []plugin.PluginMetricType{
-				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "min1"}},
-				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "scheduling"}},
-				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "min15"}},
-				plugin.PluginMetricType{Namespace_: []string{"intel", "procfs", "load", "min15_rel"}},
+			mTypes := []plugin.MetricType{
+				plugin.MetricType{Namespace_: core.NewNamespace("intel", "procfs", "load", "min1")},
+				plugin.MetricType{Namespace_: core.NewNamespace("intel", "procfs", "load", "scheduling")},
+				plugin.MetricType{Namespace_: core.NewNamespace("intel", "procfs", "load", "min15")},
+				plugin.MetricType{Namespace_: core.NewNamespace("intel", "procfs", "load", "min15_rel")},
 			}
 
 			metrics, err := loadPlg.CollectMetrics(mTypes)
@@ -158,16 +157,16 @@ func (lis *LoadInfoSuite) TestCollectMetrics() {
 
 				stats := map[string]interface{}{}
 				for _, m := range metrics {
-					n := strings.Join(m.Namespace(), "/")
+					n := m.Namespace().String()
 					stats[n] = m.Data()
 				}
 
 				So(len(metrics), ShouldEqual, len(stats))
 
-				So(stats["intel/procfs/load/min1"], ShouldNotBeNil)
-				So(stats["intel/procfs/load/scheduling"], ShouldNotBeNil)
-				So(stats["intel/procfs/load/min15"], ShouldNotBeNil)
-				So(stats["intel/procfs/load/min15_rel"], ShouldNotBeNil)
+				So(stats["/intel/procfs/load/min1"], ShouldNotBeNil)
+				So(stats["/intel/procfs/load/scheduling"], ShouldNotBeNil)
+				So(stats["/intel/procfs/load/min15"], ShouldNotBeNil)
+				So(stats["/intel/procfs/load/min15_rel"], ShouldNotBeNil)
 			})
 		})
 	})

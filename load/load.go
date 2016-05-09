@@ -30,9 +30,10 @@ import (
 	"strings"
 	"time"
 
-	str "github.com/intelsdi-x/snap-plugin-utilities/strings"
+	"github.com/intelsdi-x/snap-plugin-utilities/str"
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core"
 )
 
 const (
@@ -43,15 +44,38 @@ const (
 	// PLUGIN namespace part
 	PLUGIN = "load"
 	// VERSION of load info plugin
-	VERSION = 1
+	VERSION = 2
 )
 
 var loadInfo = "/proc/loadavg"
 
 type loadPlugin struct {
 	stats map[string]interface{}
-	host  string
 	cpus  int
+}
+
+type infoFields struct {
+	description string
+	unit        string
+}
+
+var pluginInfoFields = map[string]infoFields{
+	"min1": infoFields{
+		description: "number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 1 minute",
+		unit:        "",
+	},
+	"min5": infoFields{
+		description: "number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 5 minutes",
+		unit:        "",
+	},
+	"min15": infoFields{
+		description: "number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 15 minutes",
+		unit:        "",
+	},
+	"scheduling": infoFields{
+		description: "Two numbers separated by a slash (/). The first is the number of currently runnable kernel scheduling entities (processes, threads). The second is the number of kernel scheduling entities that currently exist on the system",
+		unit:        "",
+	},
 }
 
 // New create instance of load info plugin
@@ -69,12 +93,7 @@ func New() *loadPlugin {
 		return nil
 	}
 
-	host, err := os.Hostname()
-	if err != nil {
-		host = "localhost"
-	}
-
-	mp := &loadPlugin{stats: map[string]interface{}{}, host: host, cpus: cpu}
+	mp := &loadPlugin{stats: map[string]interface{}{}, cpus: cpu}
 
 	return mp
 }
@@ -144,13 +163,18 @@ func getStats(stats map[string]interface{}, cpus int) error {
 
 // GetMetricTypes returns list of available metric types
 // It returns error in case retrieval was not successful
-func (mp *loadPlugin) GetMetricTypes(_ plugin.PluginConfigType) ([]plugin.PluginMetricType, error) {
-	metricTypes := []plugin.PluginMetricType{}
+func (mp *loadPlugin) GetMetricTypes(_ plugin.ConfigType) ([]plugin.MetricType, error) {
+	metricTypes := []plugin.MetricType{}
 	if err := getStats(mp.stats, mp.cpus); err != nil {
 		return nil, err
 	}
 	for stat := range mp.stats {
-		metricType := plugin.PluginMetricType{Namespace_: []string{VENDOR, FS, PLUGIN, stat}}
+		info := getInfoFields(stat)
+		metricType := plugin.MetricType{
+			Namespace_:   core.NewNamespace(VENDOR, FS, PLUGIN, stat),
+			Description_: info.description,
+			Unit_:        info.unit,
+		}
 		metricTypes = append(metricTypes, metricType)
 	}
 	return metricTypes, nil
@@ -158,8 +182,8 @@ func (mp *loadPlugin) GetMetricTypes(_ plugin.PluginConfigType) ([]plugin.Plugin
 
 // CollectMetrics returns list of requested metric values
 // It returns error in case retrieval was not successful
-func (mp *loadPlugin) CollectMetrics(metricTypes []plugin.PluginMetricType) ([]plugin.PluginMetricType, error) {
-	metrics := []plugin.PluginMetricType{}
+func (mp *loadPlugin) CollectMetrics(metricTypes []plugin.MetricType) ([]plugin.MetricType, error) {
+	metrics := []plugin.MetricType{}
 	getStats(mp.stats, mp.cpus)
 	for _, metricType := range metricTypes {
 		ns := metricType.Namespace()
@@ -167,14 +191,13 @@ func (mp *loadPlugin) CollectMetrics(metricTypes []plugin.PluginMetricType) ([]p
 			return nil, fmt.Errorf("Namespace length is too short (len = %d)", len(ns))
 		}
 		stat := ns[3]
-		val, ok := mp.stats[stat]
+		val, ok := mp.stats[stat.Value]
 		if !ok {
 			return nil, fmt.Errorf("Requested stat %s is not available!", stat)
 		}
-		metric := plugin.PluginMetricType{
+		metric := plugin.MetricType{
 			Namespace_: ns,
 			Data_:      val,
-			Source_:    mp.host,
 			Timestamp_: time.Now(),
 		}
 		metrics = append(metrics, metric)
@@ -186,4 +209,12 @@ func (mp *loadPlugin) CollectMetrics(metricTypes []plugin.PluginMetricType) ([]p
 // It returns error in case retrieval was not successful
 func (mp *loadPlugin) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	return cpolicy.New(), nil
+}
+
+func getInfoFields(metric string) infoFields {
+	info, ok := pluginInfoFields[metric]
+	if !ok {
+		info = infoFields{description: "", unit: ""}
+	}
+	return info
 }

@@ -48,6 +48,11 @@ This builds the plugin in `/build/rootfs/`
 `export SNAP_PATH=$GOPATH/src/github.com/intelsdi-x/snap/build`
 * Load the plugin and create a task, see example in [Examples](https://github.com/intelsdi-x/snap-plugin-collector-load/blob/master/README.md#examples).
 
+Plugin may be additionally configured with path to `/proc/loadavg` file. It may be useful for running plugin in Docker container.
+Example configuration provided in [Examples](https://github.com/intelsdi-x/snap-plugin-collector-load/blob/master/README.md#examples)
+In case configuration is not provided in task manifest, plugin will use default path `/proc/laodavg`
+
+
 ## Documentation
 
 ### Collected Metrics
@@ -58,7 +63,11 @@ Namespace | Description (optional)
 /intel/procfs/load/min1 | number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 1 minute
 /intel/procfs/load/min5 | number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 5 minutes
 /intel/procfs/load/min15 | number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 15 minutes
-/intel/procfs/load/scheduling | Two numbers separated by a slash (/). The first is the number of currently runnable kernel scheduling entities (processes, threads). The second is the number of kernel scheduling entities that currently exist on the system
+/intel/procfs/load/min1_rel | number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 1 minute per core
+/intel/procfs/load/min5_rel | number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 5 minutes per core
+/intel/procfs/load/min15_rel | number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 15 minutes per core
+/intel/procfs/load/runnable_scheduling | The number of currently runnable kernel scheduling entities (processes, threads).
+/intel/procfs/load/existing_scheduling | The number of kernel scheduling entities that currently exist on the system
 
 ### Examples
 Example running load, passthru processor, and writing data to a file.
@@ -96,9 +105,8 @@ Create a task manifest file (exemplary file in [examples/task/] (https://github.
                 "/intel/procfs/load/scheduling": {}
             },
             "config": {
-                "/intel/mock": {
-                    "password": "secret",
-                    "user": "root"
+                "/intel/procfs/load/": {
+                    "procfs_path": "/var/procfs/loadavg"
                 }
             },
             "process": [

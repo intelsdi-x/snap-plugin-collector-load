@@ -136,12 +136,12 @@ func (lp *loadPlugin) CollectMetrics(metricTypes []plugin.MetricType) ([]plugin.
 	stats := LoadMetrics{}
 
 	// get location of loadavg
-	procFilePath, _ := config.GetConfigItem(metricTypes[0], "procfs_path")
-	lp.logger.Debugf("Procfs loadavg location found %s", procFilePath.(string))
+	procPath, _ := config.GetConfigItem(metricTypes[0], "proc_path")
+	lp.logger.Debugf("Procfs loadavg location found %s", procPath.(string))
 
 	// read metrics from provided loadavg loacation
-	if err := getStats(procFilePath.(string), &stats, lp.cpus); err != nil {
-		lp.logger.Errorf("Could not read metrics from %s location. {%s}", procFilePath.(string), err)
+	if err := getStats(procPath.(string), &stats, lp.cpus); err != nil {
+		lp.logger.Errorf("Could not read metrics from %s location. {%s}", procPath.(string), err)
 		return nil, err
 	}
 
@@ -168,8 +168,8 @@ func (lp *loadPlugin) CollectMetrics(metricTypes []plugin.MetricType) ([]plugin.
 // It returns error in case retrieval was not successful
 func (lp *loadPlugin) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	cp := cpolicy.New()
-	lp.logger.Debug("Creating new rule for procfs_path")
-	rule, _ := cpolicy.NewStringRule("procfs_path", false, "/proc/loadavg")
+	lp.logger.Debug("Creating new rule for proc_path")
+	rule, _ := cpolicy.NewStringRule("proc_path", false, "/proc")
 	node := cpolicy.NewPolicyNode()
 	node.Add(rule)
 	cp.Add([]string{pluginVendor, fs, pluginName}, node)
@@ -206,8 +206,8 @@ func getCPUs() (int, error) {
 	return cpus + 1, nil
 }
 
-func getStats(procFilePath string, stats *LoadMetrics, cpus int) error {
-	content, err := ioutil.ReadFile(procFilePath)
+func getStats(procPath string, stats *LoadMetrics, cpus int) error {
+	content, err := ioutil.ReadFile(path.Join(procPath, "loadavg"))
 	if err != nil {
 		return err
 	}

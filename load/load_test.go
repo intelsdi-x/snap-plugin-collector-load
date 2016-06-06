@@ -48,12 +48,12 @@ func (lis *LoadInfoSuite) SetupSuite() {
 	lis.min15 = 0.16
 	lis.runsch = 1
 	lis.existsch = 100
-	lis.MockLoadInfo = "mockLoadInfo"
-	createMockLoadInfo(lis.MockLoadInfo, lis.min1, lis.min5, lis.min15, lis.runsch, lis.existsch, 1111)
+	lis.MockLoadInfo = "."
+	createMockLoadInfo("loadavg", lis.min1, lis.min5, lis.min15, lis.runsch, lis.existsch, 1111)
 }
 
 func (lis *LoadInfoSuite) TearDownSuite() {
-	removeMockLoadInfo(lis.MockLoadInfo)
+	removeMockLoadInfo("loadavg")
 }
 
 func (lis *LoadInfoSuite) TestGetStats() {
@@ -61,7 +61,7 @@ func (lis *LoadInfoSuite) TestGetStats() {
 		stats := LoadMetrics{}
 
 		Convey("and mock memory info file created", func() {
-			assert.Equal(lis.T(), "mockLoadInfo", lis.MockLoadInfo)
+			assert.Equal(lis.T(), ".", lis.MockLoadInfo)
 		})
 
 		Convey("When reading load statistics from file", func() {
@@ -125,7 +125,7 @@ func (lis *LoadInfoSuite) TestCollectMetrics() {
 
 		Convey("When one wants to get values for given metric types", func() {
 			cfg := plugin.NewPluginConfigType()
-			cfg.AddItem("procfs_path", ctypes.ConfigValueStr{lis.MockLoadInfo})
+			cfg.AddItem("proc_path", ctypes.ConfigValueStr{lis.MockLoadInfo})
 			mTypes := []plugin.MetricType{
 				plugin.MetricType{Namespace_: core.NewNamespace("intel", "procfs", "load", "min1"), Config_: cfg.ConfigDataNode},
 				plugin.MetricType{Namespace_: core.NewNamespace("intel", "procfs", "load", "runnable_scheduling"), Config_: cfg.ConfigDataNode},

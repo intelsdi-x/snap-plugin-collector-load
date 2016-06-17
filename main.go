@@ -36,13 +36,7 @@ func main() {
 	}
 
 	plugin.Start(
-		plugin.NewPluginMeta(
-			load.PLUGIN,
-			load.VERSION,
-			plugin.CollectorPluginType,
-			[]string{},
-			[]string{plugin.SnapGOBContentType},
-			plugin.ConcurrencyCount(1)),
+		load.Meta(),
 		loadPlugin,
 		os.Args[1],
 	)

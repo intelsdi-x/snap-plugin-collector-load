@@ -50,7 +50,7 @@ This builds the plugin in `/build/rootfs/`
 
 Plugin may be additionally configured with path to `/proc/loadavg` file. It may be useful for running plugin in Docker container.
 Example configuration provided in [Examples](https://github.com/intelsdi-x/snap-plugin-collector-load/blob/master/README.md#examples)
-In case configuration is not provided in task manifest, plugin will use default path `/proc/laodavg`
+In case configuration is not provided in task manifest, plugin will use default path `/proc/loadavg`
 
 
 ## Documentation
@@ -106,7 +106,7 @@ Create a task manifest file (exemplary file in [examples/task/] (https://github.
             },
             "config": {
                 "/intel/procfs/load/": {
-                    "procfs_path": "/var/procfs/loadavg"
+                    "proc_path": "/var/procfs/loadavg"
                 }
             },
             "process": [

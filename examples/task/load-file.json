@@ -12,9 +12,8 @@
                 "/intel/procfs/load/scheduling": {}
             },
             "config": {
-                "/intel/mock": {
-                    "password": "secret",
-                    "user": "root"
+                "/intel/procfs/load/": {
+                    "proc_path": "/var/procfs/loadavg"
                 }
             },
             "process": [

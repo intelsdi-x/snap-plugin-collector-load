@@ -1,0 +1,10 @@
+version: '2'
+services:
+  main:
+    container_name: load_large_test
+    image: mkrolik/spytest:lscpu
+    network_mode: "host"
+    volumes:
+      - ${PLUGIN_SRC}:/snap-plugin-collector-load
+      - /proc:/var/procfs
+    entrypoint: sh -c 'python /snap-plugin-collector-load/scripts/test/large.py'

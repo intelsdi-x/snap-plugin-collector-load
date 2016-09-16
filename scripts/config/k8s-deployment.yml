@@ -1,0 +1,26 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+    name: load-deployment
+spec:
+    replicas: 1
+    template:
+        metadata:
+          labels:
+            app: load-large-test
+        spec:
+          containers:
+            - name: load-large-test
+              image: mkrolik/snap-pytest:lscpu
+              imagePullPolicy: "IfNotPresent"
+              volumeMounts:
+              - mountPath: /var/procfs
+                name: procfs
+              command:
+                - sleep
+                - "3000"
+          volumes:
+            - name: procfs
+              hostPath:
+                path: /proc

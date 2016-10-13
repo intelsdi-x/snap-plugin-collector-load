@@ -1,0 +1,11 @@
+version: '2'
+services:
+  main:
+    container_name: runner
+    image: mkrolik/snap-pytest:lscpu
+    environment:
+     - SNAP_VERSION=latest
+    volumes:
+      - ${PLUGIN_SRC}:/snap-plugin-collector-load
+      - /proc:/var/procfs
+    network_mode: "host"

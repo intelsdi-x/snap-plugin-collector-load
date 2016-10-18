@@ -47,8 +47,8 @@ class LoadCollectorLargeTest(unittest.TestCase):
 
         utils.download_binaries(self.binaries)
 
-        self.task_file = "/{}/examples/tasks/task-load.json".format(
-            os.getenv("PROJECT_NAME", "snap-plugin-collector-load"))
+        self.task_file = "{}/examples/tasks/task-load.json".format(
+            os.getenv("PROJECT_DIR", "snap-plugin-collector-load"))
 
         log.info("starting snapd")
         self.binaries.snapd.start()

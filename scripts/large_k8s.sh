@@ -41,12 +41,12 @@ while ! [ "$(kubectl get po --no-headers | grep $__deployment_name | grep Runnin
     sleep 5
 done
 _debug "copying the src into the runner"
-kubectl exec $(kubectl get po --no-headers | grep $__deployment_name | grep Running | awk '{print $1}') -c load-large-test -i  -- mkdir /src
-tar c  . | kubectl exec $(kubectl get po --no-headers | grep $__deployment_name | grep Running | awk '{print $1}') -c load-large-test -i  --  tar -x -C /src
+kubectl exec $(kubectl get po --no-headers | grep $__deployment_name | grep Running | awk '{print $1}') -c load-large-test -i  -- mkdir /tmp/src
+tar c  . | kubectl exec $(kubectl get po --no-headers | grep $__deployment_name | grep Running | awk '{print $1}') -c load-large-test -i  --  tar -x -C /tmp/src
 
 set +e
 _debug "running tests through the runner"
-kubectl exec $(kubectl get po --no-headers | grep $__deployment_name | grep Running | awk '{print $1}') -c load-large-test -i -- /src/scripts/large_test.sh
+kubectl exec $(kubectl get po --no-headers | grep $__deployment_name | grep Running | awk '{print $1}') -c load-large-test -i -- /tmp/src/scripts/large_test.sh
 test_res=$?
 set -e
 _debug "exit code $test_res"

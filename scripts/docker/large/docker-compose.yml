@@ -5,6 +5,8 @@ services:
     image: mkrolik/spytest:lscpu
     network_mode: "host"
     volumes:
-      - ${PLUGIN_SRC}:/snap-plugin-collector-load
+      - ${PLUGIN_SRC}:/${PROJECT_NAME}
       - /proc:/var/procfs
     entrypoint: sh -c 'python /snap-plugin-collector-load/scripts/test/large.py'
+    environment:
+      PROJECT_DIR: /${PROJECT_NAME}

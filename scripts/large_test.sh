@@ -27,7 +27,7 @@ __proj_name="$(basename $__proj_dir)"
 
 . "${__dir}/common.sh"
 
-export PROJECT_NAME="${__proj_name}"
+export PROJECT_DIR="${__proj_dir}"
 
 _info "execute large test"
 test_result=`python "${__proj_dir}/scripts/test/large.py"`

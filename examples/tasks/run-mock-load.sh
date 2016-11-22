@@ -23,4 +23,4 @@ function finish {
 trap finish EXIT INT TERM
 
 # downloads plugins, starts snap, load plugins and start a task
-cd "${__proj_dir}/examples/tasks" && docker exec -it ${__id} bash -c "PLUGIN_PATH=/etc/snap/plugins /${__proj_name}/examples/tasks/mock-load.sh && printf \"\n\nhint: type 'snapctl task list'\ntype 'exit' when your done\n\n\" && bash"
+cd "${__proj_dir}/examples/tasks" && docker exec -it ${__id} bash -c "PLUGIN_PATH=/etc/snap/plugins /${__proj_name}/examples/tasks/mock-load.sh && printf \"\n\nhint: type 'snaptel task list'\ntype 'exit' when your done\n\n\" && bash"

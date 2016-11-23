@@ -1,13 +1,13 @@
-# snap collector plugin - load
+# Snap collector plugin - load
 This plugin collects metrics from /proc/loadavg kernel interface about load average figures giving the number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 1, 5, and 15 minutes.  
 
-It's used in the [snap framework](http://github.com:intelsdi-x/snap).
+It's used in the [Snap framework](http://github.com:intelsdi-x/snap).
 
 1. [Getting Started](#getting-started)
   * [System Requirements](#system-requirements)
   * [Operating systems](#operating-systems)
   * [Installation](#installation)
-  * [Configuration and Usage](configuration-and-usage)
+  * [Configuration and Usage](#configuration-and-usage)
 2. [Documentation](#documentation)
   * [Collected Metrics](#collected-metrics)
   * [Examples](#examples)
@@ -19,39 +19,39 @@ It's used in the [snap framework](http://github.com:intelsdi-x/snap).
 
 ## Getting Started
 ### System Requirements
-* [golang 1.5+](https://golang.org/dl/)
+* [golang 1.6+](https://golang.org/dl/)
 
 ### Operating systems
-All OSs currently supported by snap:
+All OSs currently supported by Snap:
 * Linux/amd64
 
 ### Installation
-#### Download load plugin binary:
-You can get the pre-built binaries for your OS and architecture at snap's [GitHub Releases](https://githubYou can get the pre-built binaries for your OS and architecture at snap's [GitHub Releases](https://github.com/intelsdi-x/snap/releases) page. Download the plugins package from the latest release, unzip and store in a path you want `snapd` to access.
+#### Download the plugin binary:
+
+You can get the pre-built binaries for your OS and architecture from the plugin's [GitHub Releases](https://github.com/intelsdi-x/snap-plugin-collector-load/releases) page. Download the plugin from the latest release and load it into `snapd` (`/opt/snap/plugins` is the default location for Snap packages).
 
 #### To build the plugin binary:
-Fork https://github.com/intelsdi-x/snap-plugin-collector-load  
+Fork https://github.com/intelsdi-x/snap-plugin-collector-load
+
 Clone repo into `$GOPATH/src/github.com/intelsdi-x/`:
+
 ```
 $ git clone https://github.com/<yourGithubID>/snap-plugin-collector-load.git
 ```
 
-Build the plugin by running make within the cloned repo:
+Build the Snap load plugin by running make within the cloned repo:
 ```
 $ make
 ```
-This builds the plugin in `/build/rootfs/`
+This builds the plugin in `./build/`
 
 ### Configuration and Usage
-* Set up the [snap framework](https://github.com/intelsdi-x/snap/blob/master/README.md#getting-started)
-* Ensure `$SNAP_PATH` is exported  
-`export SNAP_PATH=$GOPATH/src/github.com/intelsdi-x/snap/build`
-* Load the plugin and create a task, see example in [Examples](https://github.com/intelsdi-x/snap-plugin-collector-load/blob/master/README.md#examples).
+* Set up the [Snap framework](https://github.com/intelsdi-x/snap#getting-started)
+* Load the plugin and create a task, see example in [Examples](#examples).
 
 Plugin may be additionally configured with path to `/proc/loadavg` file. It may be useful for running plugin in Docker container.
-Example configuration provided in [Examples](https://github.com/intelsdi-x/snap-plugin-collector-load/blob/master/README.md#examples)
+Example configuration provided in [Examples](#examples)
 In case configuration is not provided in task manifest, plugin will use default path `/proc/loadavg`
-
 
 ## Documentation
 
@@ -70,96 +70,31 @@ Namespace | Description (optional)
 /intel/procfs/load/existing_scheduling | The number of kernel scheduling entities that currently exist on the system
 
 ### Examples
-Example running load, passthru processor, and writing data to a file.
+Example of running Snap load collector and writing data to file.
 
-This is done from the snap directory.
-
-In one terminal window, open the snap daemon (in this case with logging set to 1 and trust disabled):
+In terminal go to [examples/tasks](examples/tasks) directory and execute `run-mock-load.sh`:
 ```
-$ $SNAP_PATH/bin/snapd -l 1 -t 0
+$ cd examples/tasks && ./run-mock-load.sh
 ```
 
-In another terminal window:
-Load load plugin
+Script will start docker container in which it will download load collector, passthru processor and file publisher.
+Then it will start Snap daemon, load all plugins and start example [task](examples/tasks/task-load.json).
+
+Type `snapctl task list` to get the list of active tasks
 ```
-$ $SNAP_PATH/bin/snapctl plugin load snap-plugin-collector-load
-```
-See available metrics for your system
-```
-$ $SNAP_PATH/bin/snapctl metric list
+bash-4.3# snapctl task list
+ID                                       NAME                                            STATE           HIT     MISS    FAIL    CREATED                 LAST FAILURE
+95b9fd8b-42d8-4836-be08-3865ba1f7926     Task-95b9fd8b-42d8-4836-be08-3865ba1f7926       Running         146     0       0       11:44AM 11-17-2016
 ```
 
-Create a task manifest file (exemplary file in [examples/task/] (https://github.com/intelsdi-x/snap-plugin-collector-load/blob/master/examples/task/):
-```json
-{
-    "version": 1,
-    "schedule": {
-        "type": "simple",
-        "interval": "1s"
-    },
-    "workflow": {
-        "collect": {
-            "metrics": {
-                "/intel/procfs/load/min1": {},
-                "/intel/procfs/load/min15": {},
-                "/intel/procfs/load/scheduling": {}
-            },
-            "config": {
-                "/intel/procfs/load/": {
-                    "proc_path": "/var/procfs/loadavg"
-                }
-            },
-            "process": [
-                {
-                    "plugin_name": "passthru",
-                    "process": null,
-                    "publish": [
-                        {                         
-                            "plugin_name": "file",
-                            "config": {
-                                "file": "/tmp/published_load"
-                            }
-                        }
-                    ],
-                    "config": null
-                }
-            ],
-            "publish": null
-        }
-    }
-}
+See realtime output from `snapctl task watch <task_id>` (CTRL+C to exit)
 ```
-
-Load passthru plugin for processing:
-```
-$ $SNAP_PATH/bin/snapctl plugin load build/plugin/snap-processor-passthru
-Plugin loaded
-Name: passthru
-Version: 1
-Type: processor
-Signed: false
-Loaded Time: Fri, 20 Nov 2015 11:44:03 PST
-```
-
-Load file plugin for publishing:
-```
-$ $SNAP_PATH/bin/snapctl plugin load build/plugin/snap-publisher-file
-Plugin loaded
-Name: file
-Version: 3
-Type: publisher
-Signed: false
-Loaded Time: Fri, 20 Nov 2015 11:41:39 PST
-```
-
-Create task:
-```
-$ $SNAP_PATH/bin/snapctl task create -t examples/tasks/load-file.json
-Using task manifest to create task
-Task created
-ID: 02dd7ff4-8106-47e9-8b86-70067cd0a850
-Name: Task-02dd7ff4-8106-47e9-8b86-70067cd0a850
-State: Running
+bash-4.3# snapctl task watch 95b9fd8b-42d8-4836-be08-3865ba1f7926
+Watching Task (95b9fd8b-42d8-4836-be08-3865ba1f7926):
+NAMESPACE                                DATA    TIMESTAMP
+^Cntel/procfs/load/min1                  0.38    2016-11-17 11:47:45.801133834 +0000 UTC
+/intel/procfs/load/min15                 0.43    2016-11-17 11:47:45.801146089 +0000 UTC
+/intel/procfs/load/runnable_scheduling   1       2016-11-17 11:47:45.801163284 +0000 UTC
 ```
 
 Stop task:
@@ -169,23 +104,23 @@ Task stopped:
 ID: 02dd7ff4-8106-47e9-8b86-70067cd0a850
 ```
 
+Type 'exit' when your done
+
 ### Roadmap
 There isn't a current roadmap for this plugin, but it is in active development. As we launch this plugin, we do not have any outstanding requirements for the next release. If you have a feature request, please add it as an [issue](https://github.com/intelsdi-x/snap-plugin-collector-load/issues/new) and/or submit a [pull request](https://github.com/intelsdi-x/snap-plugin-collector-load/pulls).
 
 ## Community Support
-This repository is one of **many** plugins in **snap**, a powerful telemetry framework. The full project is at http://github.com/intelsdi-x/snap.
-To reach out on other use cases, visit:
-* [snap Gitter channel](https://gitter.im/intelsdi-x/snap)
+This repository is one of **many** plugins in **Snap**, a powerful telemetry framework. See the full project at http://github.com/intelsdi-x/snap.
+
+To reach out to other users, head to the [main framework](https://github.com/intelsdi-x/snap#community-support).
 
 ## Contributing
 We love contributions!
 
 There's more than one way to give back, from examples to blogs to code updates. See our recommended process in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-And **thank you!** Your contribution, through code and participation, is incredibly important to us.
-
 ## License
-[snap](http://github.com:intelsdi-x/snap), along with this plugin, is an Open Source software released under the Apache 2.0 [License](LICENSE).
+[Snap](http://github.com:intelsdi-x/snap), along with this plugin, is an Open Source software released under the Apache 2.0 [License](LICENSE).
 
 ## Acknowledgements
 * Author: [Marcin Krolik](https://github.com/marcin-krolik/)

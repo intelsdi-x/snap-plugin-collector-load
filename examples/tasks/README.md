@@ -12,7 +12,7 @@ Running the sample is as *easy* as running the script `./run-mock-load.sh`.
 
 ## Files
 - [mock-load.sh](mock-load.sh)
-    - Downloads `snapd`, `snapctl`, `snap-plugin-collector-load`,
+    - Downloads `snapteld`, `snaptel`, `snap-plugin-collector-load`,
         `snap-plugin-publisher-mock-file` and starts the task
 - [run-mock-load.sh](run-mock-load.sh)
     - The example is launched with this script     
@@ -22,6 +22,6 @@ Running the sample is as *easy* as running the script `./run-mock-load.sh`.
     - Verifies dependencies and starts the containers.  It's called 
     by [run-mock-load.sh](run-mock-load.sh).
 - [docker-compose.yml](docker-compose.yml)
-    - A docker compose file which defines "runner" container where snapd
+    - A docker compose file which defines "runner" container where snapteld
      is run from. You will be dumped into a shell in this container
      after running.    

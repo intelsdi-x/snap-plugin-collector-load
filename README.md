@@ -82,14 +82,14 @@ Then it will start Snap daemon, load all plugins and start example [task](exampl
 
 Type `snaptel task list` to get the list of active tasks
 ```
-bash-4.3# snaptel task list
+$ snaptel task list
 ID                                       NAME                                            STATE           HIT     MISS    FAIL    CREATED                 LAST FAILURE
 95b9fd8b-42d8-4836-be08-3865ba1f7926     Task-95b9fd8b-42d8-4836-be08-3865ba1f7926       Running         146     0       0       11:44AM 11-17-2016
 ```
 
 See realtime output from `snaptel task watch <task_id>` (CTRL+C to exit)
 ```
-bash-4.3# snaptel task watch 95b9fd8b-42d8-4836-be08-3865ba1f7926
+$ snaptel task watch 95b9fd8b-42d8-4836-be08-3865ba1f7926
 Watching Task (95b9fd8b-42d8-4836-be08-3865ba1f7926):
 NAMESPACE                                DATA    TIMESTAMP
 ^Cntel/procfs/load/min1                  0.38    2016-11-17 11:47:45.801133834 +0000 UTC

@@ -28,7 +28,7 @@ All OSs currently supported by Snap:
 ### Installation
 #### Download the plugin binary:
 
-You can get the pre-built binaries for your OS and architecture from the plugin's [GitHub Releases](https://github.com/intelsdi-x/snap-plugin-collector-load/releases) page. Download the plugin from the latest release and load it into `snapd` (`/opt/snap/plugins` is the default location for Snap packages).
+You can get the pre-built binaries for your OS and architecture from the plugin's [GitHub Releases](https://github.com/intelsdi-x/snap-plugin-collector-load/releases) page. Download the plugin from the latest release and load it into `snapteld` (`/opt/snap/plugins` is the default location for Snap packages).
 
 #### To build the plugin binary:
 Fork https://github.com/intelsdi-x/snap-plugin-collector-load
@@ -80,16 +80,16 @@ $ cd examples/tasks && ./run-mock-load.sh
 Script will start docker container in which it will download load collector, passthru processor and file publisher.
 Then it will start Snap daemon, load all plugins and start example [task](examples/tasks/task-load.json).
 
-Type `snapctl task list` to get the list of active tasks
+Type `snaptel task list` to get the list of active tasks
 ```
-bash-4.3# snapctl task list
+$ snaptel task list
 ID                                       NAME                                            STATE           HIT     MISS    FAIL    CREATED                 LAST FAILURE
 95b9fd8b-42d8-4836-be08-3865ba1f7926     Task-95b9fd8b-42d8-4836-be08-3865ba1f7926       Running         146     0       0       11:44AM 11-17-2016
 ```
 
-See realtime output from `snapctl task watch <task_id>` (CTRL+C to exit)
+See realtime output from `snaptel task watch <task_id>` (CTRL+C to exit)
 ```
-bash-4.3# snapctl task watch 95b9fd8b-42d8-4836-be08-3865ba1f7926
+$ snaptel task watch 95b9fd8b-42d8-4836-be08-3865ba1f7926
 Watching Task (95b9fd8b-42d8-4836-be08-3865ba1f7926):
 NAMESPACE                                DATA    TIMESTAMP
 ^Cntel/procfs/load/min1                  0.38    2016-11-17 11:47:45.801133834 +0000 UTC
@@ -99,7 +99,7 @@ NAMESPACE                                DATA    TIMESTAMP
 
 Stop task:
 ```
-$ $SNAP_PATH/bin/snapctl task stop 02dd7ff4-8106-47e9-8b86-70067cd0a850
+$ $SNAP_PATH/bin/snaptel task stop 02dd7ff4-8106-47e9-8b86-70067cd0a850
 Task stopped:
 ID: 02dd7ff4-8106-47e9-8b86-70067cd0a850
 ```

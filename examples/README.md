@@ -8,19 +8,19 @@ them to file.
 ### Requirements 
  * `docker` and `docker-compose` are **installed** and **configured** 
 
-Running the sample is as *easy* as running the script `./run-mock-load.sh`.
+Running the sample is as *easy* as running the script `./run-file-load.sh`.
 
 ## Files
-- [mock-load.sh](mock-load.sh)
+- [file-load.sh](file-load.sh)
     - Downloads `snapteld`, `snaptel`, `snap-plugin-collector-load`,
-        `snap-plugin-publisher-mock-file` and starts the task
-- [run-mock-load.sh](run-mock-load.sh)
+        `snap-plugin-publisher-file` and starts the task
+- [run-file-load.sh](run-file-load.sh)
     - The example is launched with this script     
 - [task-load.json](task-load.json)
     - Snap task definition
 - [.setup.sh](.setup.sh)
     - Verifies dependencies and starts the containers.  It's called 
-    by [run-mock-load.sh](run-mock-load.sh).
+    by [run-file-load.sh](run-file-load.sh).
 - [docker-compose.yml](docker-compose.yml)
     - A docker compose file which defines "runner" container where snapteld
      is run from. You will be dumped into a shell in this container

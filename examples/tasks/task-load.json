@@ -1,37 +1,29 @@
 {
-    "version": 1,
-    "schedule": {
-        "type": "simple",
-        "interval": "1s"
-    },
-    "workflow": {
-        "collect": {
-            "metrics": {
-                "/intel/procfs/load/min1": {},
-                "/intel/procfs/load/min15": {},
-                "/intel/procfs/load/runnable_scheduling": {}
-            },
-            "config": {
-                "/intel/procfs/load": {
-                    "proc_path": "/var/procfs"
-                }
-            },
-            "process": [
-                {
-                    "plugin_name": "passthru",
-                    "process": null,
-                    "publish": [
-                        {
-                            "plugin_name": "mock-file",
-                            "config": {
-                                "file": "/tmp/published_load"
-                            }
-                        }
-                    ],
-                    "config": null
-                }
-            ],
-            "publish": null
+  "version": 1,
+  "schedule": {
+    "type": "simple",
+    "interval": "1s"
+  },
+  "workflow": {
+    "collect": {
+      "metrics": {
+        "/intel/procfs/load/min1": {},
+        "/intel/procfs/load/min15": {},
+        "/intel/procfs/load/runnable_scheduling": {}
+      },
+      "config": {
+        "/intel/procfs/load": {
+          "proc_path": "/var/procfs"
         }
+      },
+      "publish": [
+        {
+          "plugin_name": "file",
+          "config": {
+            "file": "/tmp/published_load"
+          }
+        }
+      ]
     }
+  }
 }

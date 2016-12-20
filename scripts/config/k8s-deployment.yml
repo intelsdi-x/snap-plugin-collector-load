@@ -13,7 +13,7 @@ spec:
           containers:
             - name: load-large-test
               image: mkrolik/snap-pytest:lscpu
-              imagePullPolicy: "IfNotPresent"
+              imagePullPolicy: "Always"
               volumeMounts:
               - mountPath: /var/procfs
                 name: procfs

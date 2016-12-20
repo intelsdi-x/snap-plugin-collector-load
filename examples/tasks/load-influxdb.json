@@ -1,38 +1,42 @@
 {
-    "version": 1,
-    "schedule": {
-        "type": "simple",
-        "interval": "1s"
-    },
-    "workflow": {
-        "collect": {
-            "metrics": {
-                "/intel/procfs/load/min1": {},
-                "/intel/procfs/load/min15": {},
-                "/intel/procfs/load/runnable_scheduling": {}
-            },
-            "config": {
-                "/intel/procfs/load": {
-                    "proc_path": "/proc"
-                }
-            },
-            "process": [
-                {
-                    "plugin_name": "passthru",
-                    "publish": [
-		        {	
-                            "plugin_name": "influxdb",
-                            "config": {
-                                "host": "localhost",
-                                "port": 8086,
-                                "database": "test",
-                                "user": "admin",
-                                "password": "admin"
-                            }
-                        }
-                    ]
-                }
-            ]
+  "version": 1,
+  "schedule": {
+    "type": "simple",
+    "interval": "1s"
+  },
+  "workflow": {
+    "collect": {
+      "metrics": {
+        "/intel/procfs/load/min1": {},
+        "/intel/procfs/load/min15": {},
+        "/intel/procfs/load/runnable_scheduling": {}
+      },
+      "config": {
+        "/intel/procfs/load": {
+          "proc_path": "/proc"
         }
+      },
+      "process": [
+        {
+          "plugin_name": "statistics",
+          "config": {
+            "SlidingWindowLength": 5,
+            "SlidingFactor": 2
+          },
+          "publish": [
+            {
+              "plugin_name": "influxdb",
+              "config": {
+                "host": "localhost",
+                "port": 8086,
+                "database": "test",
+                "user": "admin",
+                "password": "admin"
+              }
+            }
+          ]
+        }
+      ]
     }
+  }
 }

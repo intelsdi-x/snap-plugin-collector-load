@@ -8,6 +8,10 @@ import:
   - str
 - package: github.com/intelsdi-x/snap
   version: 14a1611e90f4f94d690e85c6ae58d81a5cf433d0
+- package: github.com/blabber/go-freebsd-sysctl
+  version: 30a4aca6b54769e4c033541da2664de0459841b8
+  subpackages:
+  - sysctl
 testImport:
 - package: github.com/smartystreets/goconvey
   subpackages:

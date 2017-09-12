@@ -1,6 +1,10 @@
 hash: 415be4f5cd70b547fe5b97093e90d25e2c04486496afef38ff1cc436a95a5cbb
-updated: 2016-10-12T14:55:15.235959529+02:00
+updated: 2017-03-10T00:23:50.154652683-05:00
 imports:
+- name: github.com/blabber/go-freebsd-sysctl
+  version: 30a4aca6b54769e4c033541da2664de0459841b8
+  subpackages:
+  - sysctl
 - name: github.com/intelsdi-x/snap
   version: 14a1611e90f4f94d690e85c6ae58d81a5cf433d0
   subpackages:

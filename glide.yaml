@@ -1,13 +1,13 @@
 package: github.com/intelsdi-x/snap-plugin-collector-load
 import:
-- package: github.com/Sirupsen/logrus
+- package: github.com/sirupsen/logrus
 - package: github.com/intelsdi-x/snap-plugin-utilities
   subpackages:
   - config
   - ns
   - str
 - package: github.com/intelsdi-x/snap
-  version: 14a1611e90f4f94d690e85c6ae58d81a5cf433d0
+  version: ^2.0.0
 testImport:
 - package: github.com/smartystreets/goconvey
   subpackages:

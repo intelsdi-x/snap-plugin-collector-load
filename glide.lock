@@ -1,8 +1,10 @@
-hash: 415be4f5cd70b547fe5b97093e90d25e2c04486496afef38ff1cc436a95a5cbb
-updated: 2016-10-12T14:55:15.235959529+02:00
+hash: 2528e062e4e5143f624629fb8e702050d9534c60ee4de8eb95f29354a5bad221
+updated: 2017-10-31T09:52:24.817297056+08:00
 imports:
+- name: github.com/asaskevich/govalidator
+  version: 9699ab6b38bee2e02cd3fe8b99ecf67665395c96
 - name: github.com/intelsdi-x/snap
-  version: 14a1611e90f4f94d690e85c6ae58d81a5cf433d0
+  version: 79e1dd457d77c985491c2f4746cbc425fb3dc2dd
   subpackages:
   - control/plugin
   - control/plugin/cpolicy
@@ -13,10 +15,12 @@ imports:
   - core/ctypes
   - core/serror
   - pkg/ctree
+  - pkg/fileutils
   - pkg/schedule
+  - pkg/stringutils
   - scheduler/wmap
 - name: github.com/intelsdi-x/snap-plugin-utilities
-  version: 925bafffac36edcfaf4aff937dcb7d3d5659782d
+  version: 53c6d26990688f3f277511f5501518167f4cb798
   subpackages:
   - config
   - ns
@@ -25,10 +29,10 @@ imports:
   version: 632977f98cd34d217c4b57d0840ec188b3d3dcaf
 - name: github.com/robfig/cron
   version: 32d9c273155a0506d27cf73dd1246e86a470997e
-- name: github.com/Sirupsen/logrus
+- name: github.com/sirupsen/logrus
   version: be52937128b38f1d99787bb476c789e2af1147f1
 - name: golang.org/x/sys
-  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
+  version: c8bc69bc2db9c57ccf979550bc69655df5039a8a
   subpackages:
   - unix
 - name: gopkg.in/yaml.v2
@@ -49,18 +53,18 @@ testImports:
   subpackages:
   - difflib
 - name: github.com/smartystreets/assertions
-  version: 443d812296a84445c202c085f19e18fc238f8250
+  version: 4ea54c1f28ad3ae597e76607dea3871fa177e263
   subpackages:
   - internal/go-render/render
   - internal/oglematchers
 - name: github.com/smartystreets/goconvey
-  version: 995f5b2e021c69b8b028ba6d0b05c1dd500783db
+  version: 9e8dc3f972df6c8fcc0375ef492c24d0bb204857
   subpackages:
   - convey
   - convey/gotest
   - convey/reporting
 - name: github.com/stretchr/testify
-  version: 976c720a22c8eb4eb6a0b4348ad85ad12491a506
+  version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
   - assert
   - require
